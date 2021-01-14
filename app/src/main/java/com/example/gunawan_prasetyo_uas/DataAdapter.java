@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,13 +59,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder
             public void onClick(View v) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                 alertDialog.setTitle("Informasi Produk");
-                alertDialog.setMessage("Yakin Akan Menghapus " + id);
+                alertDialog.setMessage("Yakin Akan Menghapus " + nama + "");
                 alertDialog.setNegativeButton("Hapus", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-//                        db.dataDao().delete(new Product(id));
-
+                        onDeleteData(position);
                     }
                 });
                 AlertDialog dialog = alertDialog.create();
@@ -89,5 +88,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder
             tvDesc = (TextView) itemView.findViewById(R.id.tx_desc);
             imgImage = (ImageView) itemView.findViewById(R.id.im_product);
         }
+    }
+
+    private void onDeleteData(int position){
+        db.dataDao().delete(products.get(position));
+        products.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, products.size());
+        Toast.makeText(context, "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show();
     }
 }
