@@ -1,32 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:stretchColumns="1"
+    android:padding="20dp">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/im_product"/>
+    <TableRow android:padding="5dip">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        <ImageView
+            android:layout_span="2"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:id="@+id/im_product"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginBottom="10dp"
+            android:text="Nama Developer "
+            android:textSize="20dp" />
 
+        <TextView
+            android:id="@+id/tx_nama"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginBottom="10dp"
+            android:text=" : Nama"
+            android:textSize="20dp" />
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginBottom="10dp"
+            android:text="Nama Game  "
+            android:textSize="20dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Nama"
-        android:id="@+id/tx_nama"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Desc"
-        android:id="@+id/tx_desc"/>
-    </LinearLayout>
-
-</LinearLayout>
+        <TextView
+            android:id="@+id/tx_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginBottom="10dp"
+            android:text=" : Nama"
+            android:textSize="20dp" />
+    </TableRow>
+</TableLayout>

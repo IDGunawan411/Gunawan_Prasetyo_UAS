@@ -16,7 +16,17 @@ public abstract class DataDao {
     @Insert
     public abstract void insertAll(Product product);
 
+    @Insert
+    public abstract void insertDesc(Product product);
+
     @Delete
     public abstract void delete(Product product);
+
+    @Query("DELETE FROM product WHERE id = :id")
+    public abstract void deleteById(int id);
+//    public abstract List<Product> findUsersByNameAndLastName(String name, String last);
+
+    @Query("DELETE FROM Product")
+    public abstract void deleteAll();
 
 }

@@ -47,11 +47,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://api.otreeba.com/v1/products";
+        String url1 = "https://api.rawg.io/api/developers?page=7";
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+        JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(
                 Request.Method.GET,
-                url,
+                url1,
                 null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -59,19 +59,28 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("cek json: ", response.toString());
 
                         String id, nama, desc, image;
-
                         try {
-                            JSONArray jsonArray = response.getJSONArray("data");
+                            JSONArray jsonArray = response.getJSONArray("results");
                             if (jsonArray.length() != 0) {
-                                for (int i = 0; i < jsonArray.length(); i++) {
+                                for (int i = 1; i < 3 ; i++) {
                                     JSONObject data = jsonArray.getJSONObject(i);
 
-                                    nama = data.getString("name").toString().trim();
-                                    desc = data.getString("description").toString().trim();
-                                    image = data.getString("image").toString().trim();
+                                    nama = " : " + data.getString("name").toString().trim();
+                                    image = data.getString("image_background").toString().trim();
+//                                    desc = data.getString("games").toCharArray().toString();
 
+                                    JSONArray jsonArray1 = data.getJSONArray("games");
+                                    if (jsonArray1.length() != 0) {
+                                        for (int g = 0; g < 1 ; g++) {
+                                            JSONObject data1 = jsonArray1.getJSONObject(g);
+
+                                            desc = " : " + data1.getString("name").toString().trim();
+                                            db.dataDao().insertAll(new Product(nama, desc,image));
+                                        }
+                                    }
                                     // masukkan melalui dao
-                                    db.dataDao().insertAll(new Product(nama, desc, image));
+//                                    db.dataDao().insertAll(new Product(nama, desc,image));
+
                                 }
 
                                 // jika data sudah masuk semua, buka MainAppActivity
@@ -92,7 +101,54 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-
-        queue.add(jsonObjectRequest);
+//        RequestQueue queue2 = Volley.newRequestQueue(MainActivity.this);
+//        String url2 = "https://api.rawg.io/api/developers?page=6";
+//
+//        JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(
+//                Request.Method.GET,
+//                url2,
+//                null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.d("cek json: ", response.toString());
+//
+//                        String id, nama, desc, image;
+//
+//                        try {
+//                            JSONArray jsonArray = response.getJSONArray("results");
+//                            if (jsonArray.length() != 0) {
+//                                for (int i = 0; i < 11 ; i++) {
+//                                    JSONObject data = jsonArray.getJSONObject(i);
+//
+//                                    nama = data.getString("name").toString().trim();
+//                                    desc = data.getString("games_count").toString().trim();
+//                                    image = data.getString("image_background").toString().trim();
+//
+//                                    // masukkan melalui dao
+//                                    db.dataDao().insertAll(new Product(nama, desc, image));
+//                                }
+//
+//                                // jika data sudah masuk semua, buka MainAppActivity
+//                                Intent i = new Intent(getApplicationContext(), MainAppActivity.class);
+//                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                getApplicationContext().startActivity(i);
+//                                finish();// tutup activity ini
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Log.d("error : ", error.toString());
+//                    }
+//                }
+//        );
+        queue.add(jsonObjectRequest1);
+//        queue.add(jsonObjectRequest2);
     }
+
 }

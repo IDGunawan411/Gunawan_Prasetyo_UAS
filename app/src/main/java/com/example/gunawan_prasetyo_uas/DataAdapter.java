@@ -8,17 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder> {
     private List<Product> products;
     private Context context;
+    static MyDatabase db;
+//    db = Room.databaseBuilder(getApplicationContext(), MyDatabase.class, "database").allowMainThreadQueries().build();
+////
+//    List<Product> products = db.dataDao().getAll();
 
     public DataAdapter(List<Product> products,Context context){
         this.products = products;
@@ -36,40 +43,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder
         return viewHolder;
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        final String nama,image, desc;
-        nama  = products.get(position).getNama();
-        desc  = products.get(position).getDesc();
-        image = products.get(position).getImage();
-
-        final int id = products.get(position).getId();
-        holder.tvNama.setText(nama);
-        holder.tvDesc.setText(desc);
-        Glide.with(context).load(image).into(holder.imgImage);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-                alertDialog.setTitle("Informasi Produk");
-                alertDialog.setMessage("Yakin Akan Menghapus " + nama + "");
-                alertDialog.setNegativeButton("Hapus", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        products.remove(position); //hapus baris customers
-                        notifyItemRemoved(position); //refresh customer list ( ada animasinya )
-                        notifyDataSetChanged();
-
-                    }
-                });
-                AlertDialog dialog = alertDialog.create();
-                dialog.show();
-            }
-        });
-
-    }
 
     @Override
     public int getItemCount() {
@@ -88,11 +61,46 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder
         }
     }
 
-//    private void onDeleteData(int position){
-//        db.dataDao().delete(products.get(position));
-//        products.remove(position);
-//        notifyItemRemoved(position);
-//        notifyItemRangeChanged(position, products.size());
-//        Toast.makeText(context, "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show();
-//    }
+    @Override
+    public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
+        final String nama,image, desc;
+        nama  = products.get(position).getNama();
+        desc  = products.get(position).getDesc();
+        image = products.get(position).getImage();
+
+        final int id = products.get(position).getId();
+
+        holder.tvNama.setText(nama);
+        holder.tvDesc.setText(desc);
+        Glide.with(context).load(image).into(holder.imgImage);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                alertDialog.setTitle("Informasi Game");
+                alertDialog.setMessage("Yakin Akan Menghapus " + nama + "");
+                alertDialog.setNegativeButton("Hapus", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Delete_Pos(position);
+                        Toast.makeText(v.getContext(),"Data" + nama + " Berhasil Dihapus",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AlertDialog dialog = alertDialog.create();
+                dialog.show();
+            }
+        });
+
+    }
+
+    private void Delete_Pos(int position){
+
+        MainActivity.db.dataDao().delete(products.get(position));
+        products.remove(position); //hapus data
+        notifyItemRemoved(position); //refresh data
+        notifyDataSetChanged();
+
+    }
+
 }

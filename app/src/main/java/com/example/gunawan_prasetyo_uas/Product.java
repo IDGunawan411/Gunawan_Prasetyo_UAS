@@ -15,6 +15,7 @@ public class Product {
     private String desc;
     @ColumnInfo(name = "img")
     private String image;
+
     @Ignore
     public Product(String nama, String desc, String image){
         this.nama = nama;
