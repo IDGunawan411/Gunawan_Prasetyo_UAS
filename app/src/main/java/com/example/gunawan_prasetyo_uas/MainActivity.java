@@ -44,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-
-
+        
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
         String url1 = "https://api.rawg.io/api/developers?page=7";
 
