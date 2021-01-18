@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     // masukkan melalui dao
 //                                    db.dataDao().insertAll(new Product(nama, desc,image));
-
                                 }
 
                                 // jika data sudah masuk semua, buka MainAppActivity
