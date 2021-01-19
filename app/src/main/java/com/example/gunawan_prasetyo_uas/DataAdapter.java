@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
 
@@ -20,25 +19,22 @@ import java.util.List;
 
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder> {
-    private List<Product> products;
+    private List<DevGame> devGames;
     private Context context;
     static MyDatabase db;
-//    db = Room.databaseBuilder(getApplicationContext(), MyDatabase.class, "database").allowMainThreadQueries().build();
-////
-//    List<Product> products = db.dataDao().getAll();
 
-    public DataAdapter(List<Product> products,Context context){
-        this.products = products;
+    public DataAdapter(List<DevGame> devGames, Context context){
+        this.devGames = devGames;
         this.context = context;
     }
 
-    public List<Product> getProduct(){
-        return products;
+    public List<DevGame> getProduct(){
+        return devGames;
     }
     @NonNull
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dev_game_layout, parent, false);
         CardViewHolder viewHolder = new CardViewHolder(view);
         return viewHolder;
     }
@@ -46,32 +42,37 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder
 
     @Override
     public int getItemCount() {
-        return products.size();
+        return devGames.size();
     }
 
     public class CardViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNama;
-        TextView tvDesc;
+        TextView tvNamaDev;
+        TextView tvNamaGame;
+        TextView tvAddedGame;
         ImageView imgImage;
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvNama = (TextView) itemView.findViewById(R.id.tx_nama);
-            tvDesc = (TextView) itemView.findViewById(R.id.tx_desc);
-            imgImage = (ImageView) itemView.findViewById(R.id.im_product);
+            tvNamaDev = (TextView) itemView.findViewById(R.id.tx_nama_dev);
+            tvNamaGame = (TextView) itemView.findViewById(R.id.tx_nama_game);
+
+            tvAddedGame = (TextView) itemView.findViewById(R.id.tx_added_game);
+            imgImage = (ImageView) itemView.findViewById(R.id.im_game);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        final String nama,image, desc;
-        nama  = products.get(position).getNama();
-        desc  = products.get(position).getDesc();
-        image = products.get(position).getImage();
+        final String dev,image, game, added;
+        dev  = devGames.get(position).getDev();
+        game  = devGames.get(position).getGame();
+        added  = devGames.get(position).getAdded();
+        image = devGames.get(position).getImage();
 
-        final int id = products.get(position).getId();
+        final int id = devGames.get(position).getId();
 
-        holder.tvNama.setText(nama);
-        holder.tvDesc.setText(desc);
+        holder.tvNamaDev.setText(dev);
+        holder.tvNamaGame.setText(game);
+        holder.tvAddedGame.setText(added);
         Glide.with(context).load(image).into(holder.imgImage);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -79,12 +80,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder
             public void onClick(View v) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                 alertDialog.setTitle("Informasi Game");
-                alertDialog.setMessage("Yakin Akan Menghapus " + nama + "");
+                alertDialog.setMessage("Yakin Akan Menghapus " + dev + "");
                 alertDialog.setNegativeButton("Hapus", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Delete_Pos(position);
-                        Toast.makeText(v.getContext(),"Data" + nama + " Berhasil Dihapus",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(),"Data" + dev + " Berhasil Dihapus",Toast.LENGTH_SHORT).show();
                     }
                 });
                 AlertDialog dialog = alertDialog.create();
@@ -96,8 +97,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder
 
     private void Delete_Pos(int position){
 
-        MainActivity.db.dataDao().delete(products.get(position));
-        products.remove(position); //hapus data
+        MainActivity.db.dataDao().delete(devGames.get(position));
+        devGames.remove(position); //hapus data
         notifyItemRemoved(position); //refresh data
         notifyDataSetChanged();
 

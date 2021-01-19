@@ -4,29 +4,27 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 
 @Dao
 public abstract class DataDao {
-    @Query("SELECT * FROM Product")
-    public abstract List<Product> getAll();
+    @Query("SELECT * FROM DevGame")
+    public abstract List<DevGame> getAll();
 
     @Insert
-    public abstract void insertAll(Product product);
+    public abstract void insertAll(DevGame devGame);
 
     @Insert
-    public abstract void insertDesc(Product product);
+    public abstract void insertDesc(DevGame devGame);
 
     @Delete
-    public abstract void delete(Product product);
+    public abstract void delete(DevGame devGame);
 
-    @Query("DELETE FROM product WHERE id = :id")
+    @Query("DELETE FROM DevGame WHERE id = :id")
     public abstract void deleteById(int id);
-//    public abstract List<Product> findUsersByNameAndLastName(String name, String last);
 
-    @Query("DELETE FROM Product")
+    @Query("DELETE FROM DevGame")
     public abstract void deleteAll();
 
 }

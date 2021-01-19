@@ -3,7 +3,6 @@ package com.example.gunawan_prasetyo_uas;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
@@ -26,7 +25,7 @@ import java.util.List;
 
 public class MainAppActivity extends AppCompatActivity {
     DataAdapter adapter;
-    List<Product> products;
+    List<DevGame> devGames;
     SwipeRefreshLayout srl;
 
     @Override
@@ -55,12 +54,12 @@ public class MainAppActivity extends AppCompatActivity {
     }
 
     private void showRecycleView() {
-        RecyclerView view = (RecyclerView) findViewById(R.id.rv_product);
+        RecyclerView view = (RecyclerView) findViewById(R.id.rv_devgame);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this,1);
         view.setLayoutManager(mLayoutManager);
 
-        products = MainActivity.db.dataDao().getAll(); //Ambil semua data
-        adapter = new DataAdapter(products, this);
+        devGames = MainActivity.db.dataDao().getAll(); //Ambil semua data
+        adapter = new DataAdapter(devGames, this);
         view.setAdapter(adapter);
     }
 
@@ -78,14 +77,14 @@ public class MainAppActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.d("cek json: ", response.toString());
 
-                        String id, nama, desc, image;
+                        String id, dev, game, image, added;
                         try {
                             JSONArray jsonArray = response.getJSONArray("results");
                             if (jsonArray.length() != 0) {
-                                for (int i = 1; i < 3 ; i++) {
+                                for (int i = 1; i < 4 ; i++) {
                                     JSONObject data = jsonArray.getJSONObject(i);
 
-                                    nama = " : " + data.getString("name").toString().trim();
+                                    dev = " : " + data.getString("name").toString().trim();
                                     image = data.getString("image_background").toString().trim();
 //                                    desc = data.getString("games").toCharArray().toString();
 
@@ -94,8 +93,9 @@ public class MainAppActivity extends AppCompatActivity {
                                         for (int g = 0; g < 1 ; g++) {
                                             JSONObject data1 = jsonArray1.getJSONObject(g);
 
-                                            desc = " : " + data1.getString("name").toString().trim();
-                                            MainActivity.db.dataDao().insertAll(new Product(nama, desc,image));
+                                            added = " : " + data1.getString("added").toString().trim();
+                                            game = " : " + data1.getString("name").toString().trim();
+                                            MainActivity.db.dataDao().insertAll(new DevGame(dev, game,image, added));
                                         }
                                     }
 
@@ -119,52 +119,6 @@ public class MainAppActivity extends AppCompatActivity {
                     }
                 }
         );
-//        RequestQueue queue2 = Volley.newRequestQueue(MainActivity.this);
-//        String url2 = "https://api.rawg.io/api/developers?page=6";
-//
-//        JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(
-//                Request.Method.GET,
-//                url2,
-//                null,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        Log.d("cek json: ", response.toString());
-//
-//                        String id, nama, desc, image;
-//
-//                        try {
-//                            JSONArray jsonArray = response.getJSONArray("results");
-//                            if (jsonArray.length() != 0) {
-//                                for (int i = 0; i < 11 ; i++) {
-//                                    JSONObject data = jsonArray.getJSONObject(i);
-//
-//                                    nama = data.getString("name").toString().trim();
-//                                    desc = data.getString("games_count").toString().trim();
-//                                    image = data.getString("image_background").toString().trim();
-//
-//                                    // masukkan melalui dao
-//                                    db.dataDao().insertAll(new Product(nama, desc, image));
-//                                }
-//
-//                                // jika data sudah masuk semua, buka MainAppActivity
-//                                Intent i = new Intent(getApplicationContext(), MainAppActivity.class);
-//                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                getApplicationContext().startActivity(i);
-//                                finish();// tutup activity ini
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Log.d("error : ", error.toString());
-//                    }
-//                }
-//        );
         queue.add(jsonObjectRequest1);
 //        queue.add(jsonObjectRequest2);
     }
