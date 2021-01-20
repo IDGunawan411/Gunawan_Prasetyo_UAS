@@ -3,6 +3,8 @@ package com.example.gunawan_prasetyo_uas;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -80,12 +92,16 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder
             public void onClick(View v) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                 alertDialog.setTitle("Informasi Game");
-                alertDialog.setMessage("Yakin Akan Menghapus " + dev + "");
+                alertDialog.setMessage("Yakin Akan Menghapus " + id + "");
                 alertDialog.setNegativeButton("Hapus", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Delete_Pos(position);
-                        Toast.makeText(v.getContext(),"Data" + dev + " Berhasil Dihapus",Toast.LENGTH_SHORT).show();
+                        MainActivity.db.dataDao().deleteById(id);
+
+                        devGames.remove(position); //hapus data
+                        notifyItemRemoved(position); //refresh data
+                        notifyDataSetChanged();
+                        Toast.makeText(v.getContext(),"Data Berhasil Dihapus",Toast.LENGTH_SHORT).show();
                     }
                 });
                 AlertDialog dialog = alertDialog.create();
@@ -95,13 +111,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CardViewHolder
 
     }
 
-    private void Delete_Pos(int position){
 
-        MainActivity.db.dataDao().delete(devGames.get(position));
-        devGames.remove(position); //hapus data
-        notifyItemRemoved(position); //refresh data
-        notifyDataSetChanged();
-
-    }
 
 }

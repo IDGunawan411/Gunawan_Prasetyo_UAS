@@ -54,31 +54,28 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("cek json: ", response.toString());
-
                         String id, dev, game, image, added;
+
                         try {
                             JSONArray jsonArray = response.getJSONArray("results");
                             if (jsonArray.length() != 0) {
-                                for (int i = 1; i < 4 ; i++) {
+                                for (int i = 2; i < 7 ; i++) {
+                                    game = "";
                                     JSONObject data = jsonArray.getJSONObject(i);
-
-                                    dev = " : " + data.getString("name").toString().trim();
+                                    dev = data.getString("name").toString().trim();
                                     image = data.getString("image_background").toString().trim();
-//                                    desc = data.getString("games").toCharArray().toString();
 
                                     JSONArray jsonArray1 = data.getJSONArray("games");
                                     if (jsonArray1.length() != 0) {
-                                        for (int g = 0; g < 1 ; g++) {
+                                        for (int g = 0; g < jsonArray1.length() ; g++) {
                                             JSONObject data1 = jsonArray1.getJSONObject(g);
+                                            game = game + data1.getString("name").toString().trim() +"("+ data1.getString("added").toString().trim() +"), ";
 
-                                            added = " : " + data1.getString("added").toString().trim();
-                                            game = " : " + data1.getString("name").toString().trim();
-                                            MainActivity.db.dataDao().insertAll(new DevGame(dev, game,image, added));
                                         }
                                     }
-
+                                    added = data.getString("games_count").toString().trim();
+                                    MainActivity.db.dataDao().insert(dev, game,added,image);
                                 }
-
                                 // jika data sudah masuk semua, buka MainAppActivity
                                 Intent i = new Intent(getApplicationContext(), MainAppActivity.class);
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
